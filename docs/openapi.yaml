@@ -1,0 +1,377 @@
+openapi: 3.0.0
+info:
+  title: Factuplan API (Ecuador)
+  description: Especificación OpenAPI completa para Factuplan. Incluye gestión total de catálogos (Productos, Clientes, Bodegas, Tipos de Precio) y Emisión de Facturas Electrónicas válidas para el SRI. Diseñada para servidores MCP.
+  version: 1.0.0
+servers:
+  - url: https://api.factuplan.com.ec/v1
+    description: Servidor de Producción Factuplan
+security:
+  - ApiKeyAuth: []
+
+paths:
+  # ==========================================
+  # MÓDULO TRANSACCIONAL (FACTURACIÓN)
+  # ==========================================
+  /facturas:
+    get:
+      summary: Listar Facturas Emitidas
+      operationId: getFacturas
+      responses:
+        '200':
+          description: Lista de facturas emitidas y su estado en el SRI.
+    post:
+      summary: Emitir nueva Factura Electrónica
+      description: Genera y envía una factura electrónica al SRI.
+      operationId: createFactura
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaInput'
+      responses:
+        '201':
+          description: Factura creada y procesada exitosamente.
+
+  # ==========================================
+  # CATÁLOGO: CLIENTES
+  # ==========================================
+  /clients:
+    get:
+      summary: Obtener todos los Clientes
+      operationId: getClients
+      responses:
+        '200':
+          description: Lista de clientes.
+    post:
+      summary: Crear un Cliente
+      operationId: createClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '201':
+          description: Cliente creado exitosamente.
+  /clients/{id}:
+    get:
+      summary: Obtener Cliente por ID
+      operationId: getClientById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalle del cliente.
+    put:
+      summary: Actualizar Cliente
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '200':
+          description: Cliente actualizado.
+    delete:
+      summary: Eliminar Cliente
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cliente eliminado.
+
+  # ==========================================
+  # CATÁLOGO: PRODUCTOS Y CATEGORÍAS
+  # ==========================================
+  /products:
+    get:
+      summary: Obtener todos los Productos
+      operationId: getProducts
+      responses:
+        '200':
+          description: Lista de productos.
+    post:
+      summary: Crear un Producto
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Producto creado.
+  /products/{id}:
+    get:
+      summary: Obtener Producto por ID
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalle del producto.
+    put:
+      summary: Editar un Producto
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Producto actualizado.
+    delete:
+      summary: Eliminar un Producto
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Producto eliminado.
+
+  /categories:
+    get:
+      summary: Obtener Categorías
+      operationId: getCategories
+      responses:
+        '200':
+          description: Lista de categorías.
+    post:
+      summary: Crear Categoría
+      operationId: createCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+      responses:
+        '201':
+          description: Categoría creada.
+
+  # ==========================================
+  # CATÁLOGOS: PRECIOS
+  # ==========================================
+  /price-types:
+    get:
+      summary: Obtener Tipos de Precios
+      operationId: getPriceTypes
+      responses:
+        '200':
+          description: Lista de tipos de precios.
+    post:
+      summary: Crear Tipo de Precio
+      operationId: createPriceType
+      responses:
+        '201':
+          description: Tipo de precio creado.
+
+  /product-prices:
+    get:
+      summary: Obtener Precios de Productos
+      operationId: getProductPrices
+      responses:
+        '200':
+          description: Lista de precios asignados a productos.
+    post:
+      summary: Crear Precio de Producto
+      operationId: createProductPrice
+      responses:
+        '201':
+          description: Precio asignado al producto.
+
+  # ==========================================
+  # ESTRUCTURA DE LA COMPAÑÍA
+  # ==========================================
+  /companies:
+    get:
+      summary: Listar Compañías
+      operationId: getCompanies
+      responses:
+        '200':
+          description: Listado de compañías del usuario.
+          
+  /establishments:
+    get:
+      summary: Listar Establecimientos
+      operationId: getEstablishments
+      responses:
+        '200':
+          description: Sucursales de la compañía.
+
+  /emission-points:
+    get:
+      summary: Listar Puntos de Emisión
+      operationId: getEmissionPoints
+      responses:
+        '200':
+          description: Cajas o puntos de emisión.
+
+  # ==========================================
+  # CONFIGURACIÓN E INVENTARIO
+  # ==========================================
+  /taxes:
+    get:
+      summary: Listar Impuestos Configurados
+      operationId: getTaxes
+      responses:
+        '200':
+          description: Listado de impuestos aplicables (IVA, ICE).
+
+  /warehouses:
+    get:
+      summary: Listar Bodegas
+      operationId: getWarehouses
+      responses:
+        '200':
+          description: Bodegas de inventario.
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key proporcionada por Factuplan (Requerida en todas las peticiones).
+
+  schemas:
+    FacturaInput:
+      type: object
+      required:
+        - cliente
+        - items
+      properties:
+        cliente:
+          type: object
+          required: [identificacion, razonSocial]
+          properties:
+            identificacion:
+              type: string
+              description: Cédula, RUC o Pasaporte.
+            razonSocial:
+              type: string
+              description: Nombre completo o razón social.
+            email:
+              type: string
+              format: email
+            direccion:
+              type: string
+            telefono:
+              type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacturaItem'
+        puntoEmisionId:
+          type: string
+          description: ID del punto de emisión desde donde se factura.
+        metodoPago:
+          type: string
+          description: Código del método de pago del SRI (Ej. 01 para Sin utilización del sistema financiero, 20 para Transferencia).
+        fechaEmision:
+          type: string
+          format: date
+
+    FacturaItem:
+      type: object
+      required:
+        - descripcion
+        - cantidad
+        - precioUnitario
+      properties:
+        codigoPrincipal:
+          type: string
+        descripcion:
+          type: string
+        cantidad:
+          type: number
+          format: float
+        precioUnitario:
+          type: number
+          format: float
+        descuento:
+          type: number
+          format: float
+          default: 0
+
+    ClientInput:
+      type: object
+      required: [identificacion, razonSocial, tipoIdentificacion]
+      properties:
+        tipoIdentificacion:
+          type: string
+          description: Código SRI (Ej. 04 para RUC, 05 para Cédula, 06 para Pasaporte)
+        identificacion:
+          type: string
+          maxLength: 13
+        razonSocial:
+          type: string
+        email:
+          type: string
+          format: email
+        direccion:
+          type: string
+        telefono:
+          type: string
+
+    ProductInput:
+      type: object
+      required: [codigoPrincipal, nombre, precioUnitario]
+      properties:
+        codigoPrincipal:
+          type: string
+        codigoAuxiliar:
+          type: string
+        nombre:
+          type: string
+        descripcion:
+          type: string
+        precioUnitario:
+          type: number
+          format: float
+        tipoImpuestoId:
+          type: string
+          description: Referencia al ID del impuesto (IVA 0%, IVA 15%, etc.)
+        categoriaId:
+          type: string
+          description: ID de la categoría a la que pertenece.
