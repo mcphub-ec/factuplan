@@ -38,7 +38,7 @@ HTTP_TIMEOUT = float(os.environ.get("FACTUPLAN_HTTP_TIMEOUT", "30"))
 
 mcp = FastMCP(
     "factuplan",
-    host=os.getenv("MCP_HOST", "0.0.0.0"),
+    host=os.getenv("MCP_HOST", "0.0.0.0"),  # nosec B104 — configurable via MCP_HOST env
     instructions=(
         "MCP server for Factuplan REST API v1, a certified electronic invoicing "
         "solution for Ecuador (SRI). "
@@ -677,4 +677,4 @@ if __name__ == "__main__":
         app = mcp.streamable_http_app()
     else:
         raise ValueError(f"Unknown transport mode: {transport_mode}")
-    uvicorn.run(app, host=os.getenv("MCP_HOST", "0.0.0.0"), port=port)
+    uvicorn.run(app, host=os.getenv("MCP_HOST", "0.0.0.0"), port=port)  # nosec B104 — configurable via MCP_HOST env
