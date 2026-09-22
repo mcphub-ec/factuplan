@@ -5,8 +5,6 @@ builds and registers each one on import, preserving the original signatures and
 docstrings byte-for-byte so FastMCP produces identical JSON schemas.
 """
 
-from typing import Any
-
 from tools._registry import ToolSpec, register_all
 
 

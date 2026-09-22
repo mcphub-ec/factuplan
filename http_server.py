@@ -23,4 +23,4 @@ if __name__ == "__main__":
         run_app = server.mcp.streamable_http_app()
     else:
         raise ValueError(f"Unknown transport mode: {transport_mode}")
-    uvicorn.run(run_app, host=os.getenv("MCP_HOST", "0.0.0.0"), port=port)  # nosec B104
+    uvicorn.run(run_app, host=os.getenv("MCP_HOST", "0.0.0.0"), port=port)  # nosec: B104

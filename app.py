@@ -11,7 +11,7 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP(
     "factuplan",
-    host=os.getenv("MCP_HOST", "0.0.0.0"),  # nosec B104 — configurable via MCP_HOST env
+    host=os.getenv("MCP_HOST", "0.0.0.0"),  # nosec: B104
     instructions=(
         "MCP server for Factuplan REST API v1, a certified electronic invoicing "
         "solution for Ecuador (SRI). "
